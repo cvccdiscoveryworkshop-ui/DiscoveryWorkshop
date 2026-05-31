@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <meta name="theme-color" content="#2d6b6b"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+  <title>Connect Class Assessment (DISC + Spiritual Gifts)</title>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@300;400;600&display=swap');
+    :root {
+      --primary: #2d6b6b;
+      --primary-dark: #1e4f4f;
+      --primary-light: #e8f4f3;
+      --accent: #c9713c;
+      --accent-light: #f7ece3;
+      --gold: #d4a843;
+      --d: #c0523a; --i: #d4a843; --s: #2d6b6b; --c: #4a7fa5;
+      --bg: #f5f3ef;
+      --text: #2a2a2a;
+      --muted: #7a7570;
+      --border: #e2ddd8;
+    }
+    body { font-family: 'Source Sans 3', sans-serif; background: var(--bg); padding: 0; color: var(--text); min-height: 100vh; }
+
+    /* ── Header ── */
+    .site-header {
+      background: #F5F0EA;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      box-shadow: 0 2px 12px rgba(45,107,107,0.10);
+    }
+    @media (max-width: 480px) {
+      .site-header { position: relative; }
+    }
+    .header-inner {
+      max-width: 100%;
+      margin: 0;
+      padding: 0;
+      display: block;
+      line-height: 0;
+    }
+    .site-logo-banner {
+      width: 100%;
+      height: auto;
+      display: block;
+      max-height: 120px;
+      object-fit: cover;
+    }
+    @media (max-width: 600px) {
+      .site-logo-banner { max-height: 80px; }
+    }
+
+    .page-wrapper { padding: 16px 12px 40px; }
+    .container { max-width: 800px; margin: auto; background: white; padding: 24px; border-radius: 16px; box-shadow: 0 2px 20px rgba(45,107,107,0.08), 0 0 0 1px var(--border); }
+
+    h1 { font-family: 'Playfair Display', serif; color: var(--primary-dark); font-size: 1.6em; margin: 0 0 14px 0; font-weight: 700; letter-spacing: -0.01em; }
+    h2 { font-family: 'Playfair Display', serif; color: var(--primary-dark); font-size: 1.25em; }
+    h3 { color: var(--primary); font-size: 1em; }
+
+    .progress-container { position: sticky; top: 0; background: white; padding: 10px 0; z-index: 100; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+    .progress-bar-bg { background: #eee; height: 10px; border-radius: 5px; overflow: hidden; margin-top: 5px; }
+    .progress-fill { background: linear-gradient(90deg, var(--primary), var(--gold)); width: 0%; height: 100%; transition: width 0.4s ease; border-radius: 5px; }
+
+    .instruction { background: var(--primary-light); padding: 14px 18px; border-left: 4px solid var(--primary); margin-bottom: 20px; border-radius: 0 8px 8px 0; font-size: 0.97em; }
+    .q-set { border-bottom: 1px solid #eee; padding: 25px 0; border-radius: 8px; }
+    .q-set.error { background: #fff5f5; border: 1px solid #feb2b2; }
+    .q-title { font-weight: bold; color: var(--primary); display: block; margin-bottom: 15px; font-size: 1.1em; }
+
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .opt { display: flex; align-items: center; padding: 14px 12px; border: 2px solid #ddd; border-radius: 10px; cursor: pointer; transition: all 0.2s; background: #fff; font-size: 0.95em; min-height: 48px; }
+    .opt:hover { border-color: var(--primary); background: var(--primary-light); }
+    .opt.selected { border-color: var(--primary); background: var(--primary-light); box-shadow: inset 0 0 0 1px var(--primary); }
+    .opt input { margin-right: 12px; transform: scale(1.2); }
+
+    .btn { display: inline-block; width: 100%; padding: 18px 16px; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 1.05em; font-weight: 600; cursor: pointer; margin-top: 18px; letter-spacing: 0.02em; transition: background 0.2s, transform 0.1s; font-family: 'Source Sans 3', sans-serif; -webkit-tap-highlight-color: transparent; }
+    .btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+    .btn.secondary { background: #fff; color: var(--primary); border: 2px solid var(--primary); }
+    .btn.secondary:hover { background: var(--primary-light); }
+    .btn-row { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 10px; }
+
+    .card { background: #fff; border: 1px solid #e9ecef; border-radius: 12px; padding: 16px; }
+    .muted { color: var(--muted); }
+
+    .score-row { display: grid; grid-template-columns: repeat(4, minmax(120px, 1fr)); gap: 10px; margin: 18px 0; }
+    .badge { padding: 16px; border-radius: 12px; color: white; text-align: center; }
+    .D { background: var(--d); } .I { background: var(--i); } .S { background: var(--s); } .C { background: var(--c); }
+
+    .pill { display: inline-block; padding: 6px 14px; border-radius: 999px; background: var(--primary-light); margin: 4px 6px 0 0; font-weight: 600; border: 1px solid rgba(45,107,107,0.15); }
+    .pill strong { color: var(--primary); }
+
+    .pdf-image-container { margin: 16px 0; border: 1px solid #ddd; border-radius: 8px; padding: 10px; background: #fff; }
+    .pdf-image-container img { max-width: 100%; height: auto; border-radius: 4px; }
+
+    .rating-row { display: grid; grid-template-columns: 1fr; gap: 10px; }
+    .statement { padding: 14px 12px; border: 1px solid #eee; border-radius: 12px; margin-bottom: 4px; }
+    .likert { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 12px; }
+    .likert label { border: 2px solid #ddd; border-radius: 10px; padding: 14px 4px; text-align: center; cursor: pointer; user-select: none; font-size: 1em; font-weight: 600; min-height: 48px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+    .likert input { display: none; }
+    .likert label.selected { border-color: var(--primary); background: var(--primary-light); color: var(--primary-dark); font-weight: 700; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 720px) {
+      .grid { grid-template-columns: 1fr; }
+      .two-col { grid-template-columns: 1fr; }
+      .score-row { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .page-wrapper { padding: 0; }
+      .container { padding: 18px 16px; border-radius: 0; box-shadow: none; }
+      h1 { font-size: 1.4em; }
+      h2 { font-size: 1.15em; }
+      .likert { gap: 4px; }
+      .likert label { padding: 12px 2px; font-size: 0.95em; border-radius: 8px; }
+      .score-row { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .badge { padding: 12px 8px; font-size: 0.9em; }
+      .card { padding: 14px 12px; }
+      .btn { padding: 17px 16px; font-size: 1em; }
+      .instruction { padding: 12px 14px; font-size: 0.9em; }
+      .q-set { padding: 18px 0; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2ODAgMTIwIiB3aWR0aD0iMTAwJSIgcm9sZT0iaW1nIj4KICA8dGl0bGU+RGlzY292ZXJ5IFdvcmtzaG9wIGJhbm5lcjwvdGl0bGU+CiAgPGRlc2M+SG9yaXpvbnRhbCBiYW5uZXIgd2l0aCBEaXNjb3ZlcnkgV29ya3Nob3Agd29yZG1hcmsgY2VudGVyZWQgb24gY3JlYW0gYmFja2dyb3VuZCB3aXRoIGdlb21ldHJpYyBzaGFwZXMgYWxvbmcgdGhlIGJvdHRvbSBlZGdlPC9kZXNjPgogIDxyZWN0IHdpZHRoPSI2ODAiIGhlaWdodD0iMTIwIiBmaWxsPSIjRjVGMEVBIi8+CiAgPHRleHQgeD0iMzQwIiB5PSI2MiIgZm9udC1mYW1pbHk9IidBcmlhbCBCbGFjaycsJ0hlbHZldGljYSBOZXVlJyxzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iOTAwIiBmb250LXNpemU9IjQ0IiBmaWxsPSIjN0REOEQwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBsZXR0ZXItc3BhY2luZz0iMiI+RElTQ09WRVJZIFdPUktTSE9QPC90ZXh0PgogIDxyZWN0IHg9IjAiIHk9Ijg4IiB3aWR0aD0iMzgiIGhlaWdodD0iMzIiIGZpbGw9IiM3REQ4RDAiLz4KICA8cGF0aCBkPSJNMzggMTIwIEEzOCAzOCAwIDAgMCA3NiA4MiIgc3Ryb2tlPSIjMkIzQTUyIiBzdHJva2Utd2lkdGg9IjE2IiBmaWxsPSJub25lIi8+CiAgPHBhdGggZD0iTTc2IDg4IFExMDcgODggMTA3IDEyMCIgZmlsbD0iI0U4ODk2QSIvPgogIDxwYXRoIGQ9Ik0xMDcgODggUTEzOCA4OCAxMzggMTIwIiBmaWxsPSIjRjVBNjIzIi8+CiAgPHJlY3QgeD0iMTM4IiB5PSI4OCIgd2lkdGg9IjM4IiBoZWlnaHQ9IjMyIiBmaWxsPSIjN0REOEQwIi8+CiAgPHBhdGggZD0iTTE3NiAxMjAgQTM4IDM4IDAgMCAwIDIxNCA4MiIgc3Ryb2tlPSIjMkIzQTUyIiBzdHJva2Utd2lkdGg9IjE2IiBmaWxsPSJub25lIi8+CiAgPHBhdGggZD0iTTIxNCA4OCBRMjQ1IDg4IDI0NSAxMjAiIGZpbGw9IiNFODg5NkEiLz4KICA8cGF0aCBkPSJNMjQ1IDg4IFEyNzYgODggMjc2IDEyMCIgZmlsbD0iI0Y1QTYyMyIvPgogIDxyZWN0IHg9IjI3NiIgeT0iODgiIHdpZHRoPSIzOCIgaGVpZ2h0PSIzMiIgZmlsbD0iIzdERDhEMCIvPgogIDxwYXRoIGQ9Ik0zMTQgMTIwIEEzOCAzOCAwIDAgMCAzNTIgODIiIHN0cm9rZT0iIzJCM0E1MiIgc3Ryb2tlLXdpZHRoPSIxNiIgZmlsbD0ibm9uZSIvPgogIDxwYXRoIGQ9Ik0zNTIgODggUTM4MyA4OCAzODMgMTIwIiBmaWxsPSIjRTg4OTZBIi8+CiAgPHBhdGggZD0iTTM4MyA4OCBRNDE0IDg4IDQxNCAxMjAiIGZpbGw9IiNGNUE2MjMiLz4KICA8cmVjdCB4PSI0MTQiIHk9Ijg4IiB3aWR0aD0iMzgiIGhlaWdodD0iMzIiIGZpbGw9IiM3REQ4RDAiLz4KICA8cGF0aCBkPSJNNDUyIDEyMCBBMzggMzggMCAwIDAgNDkwIDgyIiBzdHJva2U9IiMyQjNBNTIiIHN0cm9rZS13aWR0aD0iMTYiIGZpbGw9Im5vbmUiLz4KICA8cGF0aCBkPSJNNDkwIDg4IFE1MjEgODggNTIxIDEyMCIgZmlsbD0iI0U4ODk2QSIvPgogIDxwYXRoIGQ9Ik01MjEgODggUTU1MiA4OCA1NTIgMTIwIiBmaWxsPSIjRjVBNjIzIi8+CiAgPHJlY3QgeD0iNTUyIiB5PSI4OCIgd2lkdGg9IjM4IiBoZWlnaHQ9IjMyIiBmaWxsPSIjN0REOEQwIi8+CiAgPHBhdGggZD0iTTU5MCAxMjAgQTM4IDM4IDAgMCAwIDYyOCA4MiIgc3Ryb2tlPSIjMkIzQTUyIiBzdHJva2Utd2lkdGg9IjE2IiBmaWxsPSJub25lIi8+CiAgPHJlY3QgeD0iNjI4IiB5PSI4OCIgd2lkdGg9IjUyIiBoZWlnaHQ9IjMyIiBmaWxsPSIjRTg4OTZBIi8+Cjwvc3ZnPgo=" alt="Discovery Workshop" class="site-logo-banner" />
+    </div>
+  </header>
+  <div class="page-wrapper">
+  <div class="container">
+
+    <!-- ===================== DISC MODULE (existing behavior) ===================== -->
+    <section id="disc-module">
+      <div id="quiz-ui">
+        <h1>Personality Assessment (DISC)</h1>
+        <div class="progress-container">
+          <div style="display:flex; justify-content:space-between; font-size:0.9em; font-weight:bold;">
+            <span>Completion Progress</span>
+            <span id="progress-text">0 / 24 answered</span>
+          </div>
+          <div class="progress-bar-bg"><div id="progress-fill" class="progress-fill"></div></div>
+        </div>
+        <div class="instruction">Select the <strong>one</strong> word in each set that most identifies you.</div>
+        <div id="quiz-list"></div>
+        <button class="btn" onclick="DISC.calculate()">View My Profile</button>
+      </div>
+
+      <div id="results" style="display:none; text-align:center;">
+        <h2>Your DISC Scores</h2>
+        <div class="score-row" id="score-output"></div>
+
+        <div class="pdf-image-container">
+          <img src="DISC Test.png" alt="DISC Quadrant Chart" />
+        </div>
+
+        <div id="style-desc" style="text-align:center; padding:20px; font-size:1.4em; font-weight:bold; background:#f9f9f9; border-radius:8px;"></div>
+
+        <div class="btn-row">
+          <button class="btn" id="btn-to-gifts" onclick="App.goToGifts()">Continue to Spiritual Gifts Test</button>
+          <button class="btn secondary" onclick="location.reload()">Reset Test</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SPIRITUAL GIFTS MODULE (isolated) ===================== -->
+    <section id="gifts-module" style="display:none;">
+      <h1>Spiritual Gifts Discovery Test</h1>
+      <div class="instruction">
+        For each statement, rate how true it is for you:<br>
+        <strong>1</strong> = Not at all like me &nbsp;|&nbsp;
+        <strong>2</strong> = Rarely like me &nbsp;|&nbsp;
+        <strong>3</strong> = Somewhat like me &nbsp;|&nbsp;
+        <strong>4</strong> = Often like me &nbsp;|&nbsp;
+        <strong>5</strong> = Definitely like me
+      </div>
+
+      <div class="progress-container">
+        <div style="display:flex; justify-content:space-between; font-size:0.9em; font-weight:bold;">
+          <span>Completion Progress</span>
+          <span id="gifts-progress-text">0 / 36 answered</span>
+        </div>
+        <div class="progress-bar-bg"><div id="gifts-progress-fill" class="progress-fill"></div></div>
+      </div>
+
+      <div id="gifts-list"></div>
+
+      <div class="btn-row">
+        <button class="btn" onclick="Gifts.calculate()">View Gifts Results</button>
+        <button class="btn secondary" onclick="App.backToDiscResults()">Back</button>
+      </div>
+
+    </section>
+
+    <!-- ===================== SPIRITUAL GIFTS RESULTS PAGE ===================== -->
+    <section id="gifts-results-page" style="display:none;">
+      <h1>Your Spiritual Gifts</h1>
+
+      <h2 style="margin-top:0; margin-bottom:14px;">Top 3 Gifts</h2>
+      <div id="gifts-top" class="card" style="margin-bottom:24px;"></div>
+
+      <h2 style="margin-bottom:14px;">Category Totals</h2>
+      <div id="gifts-totals" class="two-col" style="margin-bottom:24px;"></div>
+
+      <div class="btn-row">
+        <button class="btn" onclick="App.goToDashboard()">Continue to Summary Dashboard</button>
+        <button class="btn secondary" onclick="App.resetGiftsOnly()">Retake Gifts Test</button>
+      </div>
+    </section>
+
+    <!-- ===================== DASHBOARD ===================== -->
+    <section id="dashboard" style="display:none;">
+      <h1>Summary Dashboard</h1>
+
+      <!-- DISC Result -->
+      <div class="card" style="margin-bottom:16px;">
+        <h2 style="margin:0 0 16px 0;">DISC Personality Profile</h2>
+        <div id="dash-disc"></div>
+      </div>
+
+      <!-- Spiritual Gifts -->
+      <div class="card" style="margin-bottom:16px;">
+        <h2 style="margin:0 0 16px 0;">Top Spiritual Gifts</h2>
+        <div id="dash-gifts-top" style="margin-bottom:20px;"></div>
+        <h3 style="margin:0 0 12px 0; font-size:1em; color:var(--muted); font-family:'Source Sans 3',sans-serif; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">All Category Totals</h3>
+        <div id="dash-gifts-totals" class="two-col"></div>
+      </div>
+
+      <!-- Email Results -->
+      <div class="card" style="margin-bottom:16px; border:1px solid rgba(45,107,107,0.25); background:var(--primary-light);">
+        <h2 style="margin:0 0 6px 0;">Email My Results</h2>
+        <p class="muted" style="margin:0 0 16px 0; font-size:0.93em;">Enter your details and we'll send a copy of your results to your inbox.</p>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <input type="text" id="result-first-name" placeholder="First name"
+              style="flex:1; min-width:120px; padding:12px 16px; border:2px solid var(--border); border-radius:10px; font-size:16px; font-family:'Source Sans 3',sans-serif; outline:none; transition:border-color 0.2s; background:white;"
+              onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'" />
+            <input type="text" id="result-last-name" placeholder="Last name"
+              style="flex:1; min-width:120px; padding:12px 16px; border:2px solid var(--border); border-radius:10px; font-size:16px; font-family:'Source Sans 3',sans-serif; outline:none; transition:border-color 0.2s; background:white;"
+              onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'" />
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <input type="email" id="result-email" placeholder="your@email.com"
+              style="flex:1; min-width:200px; padding:12px 16px; border:2px solid var(--border); border-radius:10px; font-size:16px; font-family:'Source Sans 3',sans-serif; outline:none; transition:border-color 0.2s; background:white;"
+              onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'" />
+            <button class="btn" style="margin-top:0; width:auto; padding:12px 28px;" onclick="App.sendEmail()">Send Results</button>
+          </div>
+        </div>
+        <div id="email-status" style="margin-top:10px; font-size:0.93em;"></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn secondary" onclick="location.reload()">Start Over</button>
+      </div>
+    </section>
+
+  </div>
+  </div><!-- /.page-wrapper -->
+
+  <script>
+    // ==========================================================
+    // App-level state + navigation (tiny and explicit)
+    // ==========================================================
+    const App = {
+      state: {
+        disc: null,           // { scores, topStyles, label }
+        gifts: null           // { totalsByGift, top3: [{gift, total, roles}] }
+      },
+
+      goToGifts() {
+        document.getElementById('disc-module').style.display = 'none';
+        document.getElementById('gifts-module').style.display = 'block';
+        window.scrollTo(0, 0);
+        Gifts.init();
+      },
+
+      backToDiscResults() {
+        document.getElementById('gifts-module').style.display = 'none';
+        document.getElementById('disc-module').style.display = 'block';
+        document.getElementById('quiz-ui').style.display = 'none';
+        document.getElementById('results').style.display = 'block';
+        window.scrollTo(0, 0);
+      },
+
+      goToGiftsResults() {
+        const { totalsByGift, top3 } = App.state.gifts;
+
+        document.getElementById('gifts-module').style.display = 'none';
+        document.getElementById('gifts-results-page').style.display = 'block';
+        window.scrollTo(0, 0);
+
+        document.getElementById('gifts-top').innerHTML = top3
+          .map((x, i) => `
+            <div style="display:flex; align-items:flex-start; gap:14px; margin-bottom:${i < top3.length - 1 ? '18px' : '0'}; padding-bottom:${i < top3.length - 1 ? '18px' : '0'}; border-bottom:${i < top3.length - 1 ? '1px solid var(--border)' : 'none'};">
+              <div style="background:var(--primary); color:white; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1em; flex-shrink:0;">${i + 1}</div>
+              <div>
+                <div style="font-weight:700; font-size:1.1em; color:var(--primary-dark);">${x.gift} <span style="color:var(--gold); font-size:0.95em;">(${x.total} pts)</span></div>
+                <div class="muted" style="margin-top:4px; font-size:0.92em;">Suggested roles: ${x.roles.join(', ')}</div>
+              </div>
+            </div>`)
+          .join('');
+
+        const totalsWrap = document.getElementById('gifts-totals');
+        const maxTotal = Math.max(...Object.values(totalsByGift));
+        totalsWrap.innerHTML = Object.entries(totalsByGift)
+          .sort((a, b) => b[1] - a[1])
+          .map(([gift, total]) => {
+            const pct = Math.round((total / maxTotal) * 100);
+            return `<div class="card">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px;">
+                <strong style="color:var(--primary-dark);">${gift}</strong>
+                <span style="font-weight:700; color:var(--gold);">${total}</span>
+              </div>
+              <div style="background:#e8e4de; border-radius:4px; height:6px; overflow:hidden;">
+                <div style="background:linear-gradient(90deg, var(--primary), var(--gold)); width:${pct}%; height:100%; border-radius:4px; transition:width 0.5s ease;"></div>
+              </div>
+            </div>`;
+          })
+          .join('');
+      },
+
+      resetGiftsOnly() {
+        document.getElementById('gifts-results-page').style.display = 'none';
+        document.getElementById('gifts-module').style.display = 'block';
+        window.scrollTo(0, 0);
+        Gifts.reset();
+      },
+
+      goToDashboard() {
+        document.getElementById('gifts-results-page').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        window.scrollTo(0, 0);
+        Dashboard.render();
+      },
+
+      async sendEmail() {
+        const firstNameEl = document.getElementById('result-first-name');
+        const lastNameEl  = document.getElementById('result-last-name');
+        const emailEl     = document.getElementById('result-email');
+        const statusEl    = document.getElementById('email-status');
+        const firstName   = firstNameEl.value.trim().replace(/\b\w/g, c => c.toUpperCase());
+        const lastName    = lastNameEl.value.trim().replace(/\b\w/g, c => c.toUpperCase());
+        const fullName    = `${firstName} ${lastName}`.trim();
+        const email       = emailEl.value.trim();
+
+        if (!firstName) {
+          statusEl.innerHTML = '<span style="color:var(--accent);">⚠ Please enter your first name.</span>';
+          return;
+        }
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          statusEl.innerHTML = '<span style="color:var(--accent);">⚠ Please enter a valid email address.</span>';
+          return;
+        }
+
+        statusEl.innerHTML = '<span style="color:var(--muted);">Sending…</span>';
+
+        const disc  = this.state.disc;
+        const gifts = this.state.gifts;
+
+        // Build all gift totals as a plain string
+        const allGiftTotals = Object.entries(gifts.totalsByGift)
+          .sort((a, b) => b[1] - a[1])
+          .map(([g, t]) => `${g}: ${t}`)
+          .join('\n');
+
+        const templateParams = {
+          to_name:       fullName,
+          first_name:    firstName,
+          last_name:     lastName,
+          to_email:      email,
+          disc_D:        disc.scores.D,
+          disc_I:        disc.scores.I,
+          disc_S:        disc.scores.S,
+          disc_C:        disc.scores.C,
+          disc_primary:  disc.label,
+          gift_1_name:   gifts.top3[0]?.gift  ?? '',
+          gift_1_score:  gifts.top3[0]?.total ?? '',
+          gift_1_roles:  gifts.top3[0]?.roles.join(', ') ?? '',
+          gift_2_name:   gifts.top3[1]?.gift  ?? '',
+          gift_2_score:  gifts.top3[1]?.total ?? '',
+          gift_2_roles:  gifts.top3[1]?.roles.join(', ') ?? '',
+          gift_3_name:   gifts.top3[2]?.gift  ?? '',
+          gift_3_score:  gifts.top3[2]?.total ?? '',
+          gift_3_roles:  gifts.top3[2]?.roles.join(', ') ?? '',
+          all_gift_totals: allGiftTotals,
+        };
+
+        try {
+          await emailjs.send('service_iodpogm', 'template_fdtcumj', templateParams, 'SN_l7ppMfQLn47QcJ');
+          statusEl.innerHTML = '<span style="color:var(--primary);">✓ Results sent! Check your inbox.</span>';
+          firstNameEl.value = '';
+          lastNameEl.value  = '';
+          emailEl.value     = '';
+        } catch (err) {
+          console.error('EmailJS error:', err);
+          statusEl.innerHTML = `<span style="color:var(--accent);">✗ Could not send email (${err?.text || err?.message || 'unknown error'}). Please try again.</span>`;
+        }
+      },
+
+    };
+
+    // ==========================================================
+    // DISC MODULE (functionality preserved; just namespaced)
+    // ==========================================================
+    const DISC = (() => {
+      const discData = [
+        { w: ["Restrained", "Forceful", "Careful", "Expressive"], k: ["S", "D", "C", "I"] },
+        { w: ["Pioneering", "Correct", "Exciting", "Satisfied"], k: ["D", "C", "I", "S"] },
+        { w: ["Willing", "Animated", "Bold", "Precise"], k: ["S", "I", "D", "C"] },
+        { w: ["Argumentative", "Doubting", "Indecisive", "Unpredictable"], k: ["D", "C", "S", "I"] },
+        { w: ["Respectful", "Out-going", "Patient", "Daring"], k: ["C", "I", "S", "D"] },
+        { w: ["Persuasive", "Self-reliant", "Logical", "Gentle"], k: ["I", "D", "C", "S"] },
+        { w: ["Cautious", "Even-tempered", "Decisive", "Life-of-the-party"], k: ["C", "S", "D", "I"] },
+        { w: ["Popular", "Assertive", "Perfectionist", "Generous"], k: ["I", "D", "C", "S"] },
+        { w: ["Colorful", "Modest", "Easy-going", "Unyielding"], k: ["I", "C", "S", "D"] },
+        { w: ["Systematic", "Optimistic", "Persistent", "Accommodating"], k: ["C", "I", "D", "S"] },
+        { w: ["Relentless", "Humble", "Neighborly", "Talkative"], k: ["D", "C", "S", "I"] },
+        { w: ["Friendly", "Observant", "Playful", "Strong-willed"], k: ["S", "C", "I", "D"] },
+        { w: ["Charming", "Adventurous", "Disciplined", "Deliberate"], k: ["I", "D", "C", "S"] },
+        { w: ["Restrained", "Steady", "Aggressive", "Attractive"], k: ["C", "S", "D", "I"] },
+        { w: ["Enthusiastic", "Analytical", "Sympathetic", "Determined"], k: ["I", "C", "S", "D"] },
+        { w: ["Commanding", "Impulsive", "Slow-paced", "Critical"], k: ["D", "I", "S", "C"] },
+        { w: ["Consistent", "Force-of-character", "Lively", "Laid-back"], k: ["C", "D", "I", "S"] },
+        { w: ["Influential", "Kind", "Independent", "Orderly"], k: ["I", "S", "D", "C"] },
+        { w: ["Idealistic", "Popular", "Pleasant", "Out-spoken"], k: ["C", "I", "S", "D"] },
+        { w: ["Impatient", "Serious", "Procrastinator", "Emotional"], k: ["D", "C", "S", "I"] },
+        { w: ["Competitive", "Spontaneous", "Loyal", "Thoughtful"], k: ["D", "I", "S", "C"] },
+        { w: ["Self-sacrificing", "Considerate", "Convincing", "Courageous"], k: ["C", "S", "I", "D"] },
+        { w: ["Dependent", "Flighty", "Stoic", "Pushy"], k: ["S", "I", "C", "D"] },
+        { w: ["Tolerant", "Conventional", "Stimulating", "Directing"], k: ["S", "C", "I", "D"] }
+      ];
+
+      function init() {
+        const list = document.getElementById('quiz-list');
+        list.innerHTML = '';
+        discData.forEach((set, i) => {
+          let html = `<div class="q-set" id="set-${i}"><span class="q-title">Set ${i + 1}</span><div class="grid">`;
+          set.w.forEach((word, j) => {
+            html += `<label class="opt" onclick="DISC.updateUI(${i}, this)">
+                      <input type="radio" name="s${i}" value="${j}">${word}
+                    </label>`;
+          });
+          html += `</div></div>`;
+          list.innerHTML += html;
+        });
+      }
+
+      function updateUI(setIdx, element) {
+        const labels = document.querySelectorAll(`#set-${setIdx} .opt`);
+        labels.forEach(l => l.classList.remove('selected'));
+        element.classList.add('selected');
+        document.getElementById(`set-${setIdx}`).classList.remove('error');
+
+        const answeredCount = document.querySelectorAll('#disc-module input[type="radio"]:checked').length;
+        const progressPercent = (answeredCount / 24) * 100;
+        document.getElementById('progress-fill').style.width = progressPercent + '%';
+        document.getElementById('progress-text').innerText = `${answeredCount} / 24 answered`;
+      }
+
+      function calculate() {
+        let scores = { D: 0, I: 0, S: 0, C: 0 };
+        let unanswered = [];
+
+        for (let i = 0; i < 24; i++) {
+          const choice = document.querySelector(`#disc-module input[name="s${i}"]:checked`);
+          if (choice) scores[discData[i].k[choice.value]]++;
+          else unanswered.push(i);
+        }
+
+        if (unanswered.length > 0) {
+          alert('Please answer all questions.');
+          unanswered.forEach(idx => document.getElementById(`set-${idx}`).classList.add('error'));
+          document.getElementById(`set-${unanswered[0]}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+
+        document.getElementById('quiz-ui').style.display = 'none';
+        document.getElementById('results').style.display = 'block';
+        window.scrollTo(0, 0);
+
+        let out = '';
+        Object.entries(scores).forEach(([key, val]) => {
+          out += `<div class="badge ${key}"><strong>${key}</strong><br><span style="font-size:1.4em;">${val}</span></div>`;
+        });
+        document.getElementById('score-output').innerHTML = out;
+
+        const maxScore = Math.max(...Object.values(scores));
+        const topStyles = Object.keys(scores).filter(key => scores[key] === maxScore);
+        const names = { D: 'Dominance', I: 'Influence', S: 'Steadiness', C: 'Compliance' };
+
+        let descHtml = '';
+        if (topStyles.length > 1) descHtml += `<div style="color: var(--primary); margin-bottom: 10px;">Congratulations! You are Versatile.</div>`;
+        descHtml += topStyles.map(s => `${names[s]} (${s})`).join(' & ');
+        document.getElementById('style-desc').innerHTML = descHtml;
+
+        // Save for dashboard
+        App.state.disc = {
+          scores,
+          topStyles,
+          label: topStyles.map(s => `${names[s]} (${s})`).join(' & ')
+        };
+      }
+
+      return { init, updateUI, calculate };
+    })();
+
+    // ==========================================================
+    // Spiritual Gifts MODULE (isolated, no coupling to DISC DOM)
+    // Source: Connect Class PDF sections provided.
+    // Structure: 12 gifts x 3 statements each => 36 ratings
+    // ==========================================================
+    const Gifts = (() => {
+      // Each gift: name, statements[], roles[] (from the PDF)
+      const gifts = [
+        {
+          key: 'LEADERSHIP',
+          label: 'Leadership',
+          statements: [
+            'I enjoy leading and influencing others toward a goal.',
+            'People often look to me for direction.',
+            'I like bringing order and vision to teams or projects.'
+          ],
+          roles: ['Team Leader', 'Home Group / Connect Group Leader', 'Ministry Area Coordinator', 'Event or Project Lead']
+        },
+        {
+          key: 'ENCOURAGEMENT',
+          label: 'Encouragement / Exhortation',
+          statements: [
+            'I love motivating others to keep going or step into more.',
+            'I often notice when someone needs a word of hope.',
+            'I enjoy being a source of positivity and strength.'
+          ],
+          roles: ['Prayer Team', 'Care Team', 'First Impressions Team', 'Discipleship Leader', 'Home Group / Connect Group Leader or Host']
+        },
+        {
+          key: 'ADMINISTRATION',
+          label: 'Administration',
+          statements: [
+            "I'm good at organizing, planning, and managing details.",
+            'I find joy in keeping things running smoothly.',
+            'Others trust me with logistics and follow-through.'
+          ],
+          roles: ['Service Coordinator', 'Admin Support', 'Ministry Coordinator', 'Online Service Moderator', 'Communications Team', 'Events Team', 'Programming Team']
+        },
+        {
+          key: 'EVANGELISM',
+          label: 'Evangelism',
+          statements: [
+            "I'm passionate about sharing the Gospel with others.",
+            'I look for opportunities to talk about Jesus.',
+            'I feel most alive when someone says "yes" to Christ.'
+          ],
+          roles: ['Outreach Team', 'First Impressions Team', 'Prayer Team', 'Care Team', 'Discipleship Leader', 'Kids/Youth Team', 'Home Group / Connect Group Leader']
+        },
+        {
+          key: 'TEACHING',
+          label: 'Teaching',
+          statements: [
+            'I enjoy helping people understand truth clearly.',
+            "I'm passionate about digging into Scripture.",
+            'People say I make complex ideas easier to grasp.'
+          ],
+          roles: ['Home Group / Connect Group Leader', 'Kids/Youth Teacher', 'Discipleship Leader', 'Connect Class Leader', 'Service Host or Speaker']
+        },
+        {
+          key: 'FAITH',
+          label: 'Faith',
+          statements: [
+            'I believe God for big things, even when others are unsure.',
+            'I tend to trust God deeply in uncertain situations.',
+            'People often say my faith encourages their own.'
+          ],
+          roles: ['Prayer Ministry', 'Care Team', 'Kids/Youth Team', 'Discipleship Leader', 'Home Group / Connect Group Leader']
+        },
+        {
+          key: 'SHEPHERDING',
+          label: 'Shepherding / Pastoring',
+          statements: [
+            "I naturally care for people's spiritual growth.",
+            'I enjoy walking with people over the long haul.',
+            'I feel responsible for helping others mature in Christ.'
+          ],
+          roles: ['Home Group / Connect Group Leader', 'Kids/Youth Teacher', 'Prayer Team', 'Care Team', 'Discipleship Leader']
+        },
+        {
+          key: 'DISCERNMENT',
+          label: 'Discernment',
+          statements: [
+            'I can sense when something is spiritually "off" or not from God.',
+            'I have a strong awareness of truth vs deception.',
+            "I can often discern people's motives or spiritual dynamics."
+          ],
+          roles: ['Prayer Team', 'Care Team', 'Discipleship Leader', 'Connect Class Leader', 'Home Group / Connect Group Leader']
+        },
+        {
+          key: 'GIVING',
+          label: 'Giving',
+          statements: [
+            "I'm quick to give time, money, or resources when needed.",
+            'I see giving as a form of worship and joy.',
+            "I'm drawn to support causes or people with generosity."
+          ],
+          roles: ['Stewardship Team', 'Missions Support', 'Benevolence / Outreach Contributor', 'Facilities / Resource / Project Funders']
+        },
+        {
+          key: 'WISDOM',
+          label: 'Wisdom',
+          statements: [
+            "I tend to see what's best or most godly in complicated situations.",
+            'Others come to me for guidance or godly insight.',
+            'I often think in terms of long-term spiritual outcomes.'
+          ],
+          roles: ['Prayer Team', 'Preaching / Teaching', 'Discipleship Leader', 'Home Group / Connect Group Leader', 'Communications Team']
+        },
+        {
+          key: 'MERCY',
+          label: 'Mercy / Compassion',
+          statements: [
+            'I feel deeply for people who are hurting.',
+            "I'm drawn to those others might overlook or ignore.",
+            "I'm quick to show grace, comfort, or practical help."
+          ],
+          roles: ['Care Team', 'Prayer Team', 'Outreach Ministry', 'Kids/Youth Team', 'Discipleship Leader']
+        },
+        {
+          key: 'KNOWLEDGE',
+          label: 'Knowledge',
+          statements: [
+            'I love studying Scripture and theology deeply.',
+            'I enjoy uncovering biblical truths and making connections.',
+            'I retain biblical or spiritual knowledge easily.'
+          ],
+          roles: ['Kids/Youth Team', 'Discipleship Leader', 'Home Group Leader', 'Programming Team']
+        },
+        {
+          key: 'SERVING',
+          label: 'Serving / Helps',
+          statements: [
+            'I love meeting practical needs and staying behind the scenes.',
+            'I enjoy doing tasks that support others.',
+            "I'm often the first to volunteer without being asked."
+          ],
+          roles: ['Set-up / Tear-down Team', 'First Impressions Team', 'Kids/Youth Team', 'Facilities / Maintenance', 'Support Roles for Events or Teams']
+        },
+        {
+          key: 'HEALING',
+          label: 'Healing',
+          statements: [
+            'I believe God still heals today and I pray for it expectantly.',
+            "I've seen healing happen through prayer in my life or others'.",
+            'I feel called to pray for physical, emotional, or spiritual healing.'
+          ],
+          roles: ['Prayer Team', 'Care Team']
+        },
+        {
+          key: 'HOSPITALITY',
+          label: 'Hospitality',
+          statements: [
+            'I love creating welcoming spaces for others.',
+            'I enjoy hosting and helping people feel at home.',
+            "People feel safe and valued when they're around me."
+          ],
+          roles: ['Hospitality', 'First Impressions Team', 'Connect Team', 'Host for Home Groups']
+        },
+        {
+          key: 'PROPHECY',
+          label: 'Prophecy',
+          statements: [
+            "I feel burdened to speak truth, even when it's uncomfortable.",
+            'I often sense that God is speaking through me or to me.',
+            'I have a strong desire to call people to repentance or obedience.'
+          ],
+          roles: ['Prayer Team', 'Care Team', 'Preaching / Teaching', 'Discipleship Leader']
+        },
+      ];
+
+      let isInitialized = false;
+
+      function init() {
+        if (isInitialized) return;
+        renderQuestions();
+        isInitialized = true;
+      }
+
+      function renderQuestions() {
+        const container = document.getElementById('gifts-list');
+        container.innerHTML = '';
+
+        let globalIdx = 0;
+        gifts.forEach((gift, gIdx) => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.style.marginBottom = '12px';
+          card.innerHTML = `<h3 style="margin:0 0 8px 0; color: var(--primary);">${gift.label}</h3>`;
+
+          gift.statements.forEach((s, sIdx) => {
+            const qId = `gq_${gIdx}_${sIdx}`;
+            const stmt = document.createElement('div');
+            stmt.className = 'statement';
+            stmt.innerHTML = `
+              <div><strong>${s}</strong></div>
+              <div class="likert" data-qid="${qId}">
+                ${[1,2,3,4,5].map(v => `
+                  <label onclick="Gifts.select('${qId}', ${v}, this)">
+                    <input type="radio" name="${qId}" value="${v}" />${v}
+                  </label>
+                `).join('')}
+              </div>
+            `;
+            card.appendChild(stmt);
+            globalIdx++;
+          });
+
+          container.appendChild(card);
+        });
+
+        updateProgress();
+      }
+
+      function select(qid, val, el) {
+        const wrap = document.querySelector(`#gifts-module .likert[data-qid="${qid}"]`);
+        const labels = wrap.querySelectorAll('label');
+        labels.forEach(l => l.classList.remove('selected'));
+        el.classList.add('selected');
+
+        const input = wrap.querySelector(`input[value="${val}"]`);
+        input.checked = true;
+        updateProgress();
+      }
+
+      function updateProgress() {
+        const answered = document.querySelectorAll('#gifts-module input[type="radio"]:checked').length;
+        const total = gifts.reduce((sum, g) => sum + g.statements.length, 0);
+        const pct = (answered / total) * 100;
+        document.getElementById('gifts-progress-fill').style.width = pct + '%';
+        document.getElementById('gifts-progress-text').innerText = `${answered} / ${total} answered`;
+      }
+
+      function calculate() {
+        const totalQuestions = gifts.reduce((sum, g) => sum + g.statements.length, 0);
+        const answered = document.querySelectorAll('#gifts-module input[type="radio"]:checked').length;
+        if (answered < totalQuestions) {
+          alert('Please answer all statements before viewing results.');
+          return;
+        }
+
+        const totalsByGift = {};
+        gifts.forEach((gift, gIdx) => {
+          let total = 0;
+          gift.statements.forEach((_, sIdx) => {
+            const qId = `gq_${gIdx}_${sIdx}`;
+            const choice = document.querySelector(`#gifts-module input[name="${qId}"]:checked`);
+            total += parseInt(choice.value, 10);
+          });
+          totalsByGift[gift.label] = total;
+        });
+
+        const top3 = Object.entries(totalsByGift)
+          .sort((a,b) => b[1] - a[1])
+          .slice(0, 3)
+          .map(([label, total]) => {
+            const gift = gifts.find(g => g.label === label);
+            return { gift: label, total, roles: gift ? gift.roles : [] };
+          });
+
+        App.state.gifts = { totalsByGift, top3 };
+        App.goToGiftsResults();
+      }
+
+      function reset() {
+        document.querySelectorAll('#gifts-module input[type="radio"]').forEach(i => i.checked = false);
+        document.querySelectorAll('#gifts-module .likert label').forEach(l => l.classList.remove('selected'));
+        updateProgress();
+        window.scrollTo(0, 0);
+      }
+
+      return { init, select, calculate, reset };
+    })();
+
+    // ==========================================================
+    // Dashboard rendering
+    // ==========================================================
+    const Dashboard = (() => {
+      const discNames = { D: 'Dominance', I: 'Influence', S: 'Steadiness', C: 'Compliance' };
+      const discColors = { D: 'var(--d)', I: 'var(--i)', S: 'var(--s)', C: 'var(--c)' };
+
+      function render() {
+        const disc = App.state.disc;
+        const gifts = App.state.gifts;
+
+        // ── DISC ──
+        if (disc) {
+          const maxScore = Math.max(...Object.values(disc.scores));
+          const letters = ['D','I','S','C'];
+          const barsHtml = letters.map(l => {
+            const score = disc.scores[l];
+            const pct = Math.round((score / 24) * 100);
+            const isTop = score === maxScore;
+            return `
+              <div style="margin-bottom:12px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:6px; background:${discColors[l]}; color:white; font-weight:700; font-size:0.9em;">${l}</span>
+                    <span style="font-weight:${isTop ? '700' : '400'}; color:${isTop ? 'var(--primary-dark)' : 'var(--text)'};">${discNames[l]}${isTop ? ' <span style="font-size:0.8em; background:var(--gold); color:white; padding:1px 7px; border-radius:999px; margin-left:4px;">Top</span>' : ''}</span>
+                  </div>
+                  <span style="font-weight:700; color:${discColors[l]};">${score}</span>
+                </div>
+                <div style="background:#e8e4de; border-radius:4px; height:8px; overflow:hidden;">
+                  <div style="background:${discColors[l]}; width:${pct}%; height:100%; border-radius:4px; transition:width 0.5s ease;"></div>
+                </div>
+              </div>`;
+          }).join('');
+
+          const topLabel = disc.topStyles.length > 1
+            ? `<div style="margin-top:16px; padding:12px 16px; background:var(--accent-light); border-left:4px solid var(--accent); border-radius:0 8px 8px 0; font-size:0.95em;">
+                <strong>Versatile Profile:</strong> You scored equally high in ${disc.topStyles.map(s => `${discNames[s]} (${s})`).join(' & ')}.
+               </div>`
+            : `<div style="margin-top:16px; padding:12px 16px; background:var(--primary-light); border-left:4px solid var(--primary); border-radius:0 8px 8px 0; font-size:0.95em;">
+                <strong>Primary Style:</strong> ${discNames[disc.topStyles[0]]} (${disc.topStyles[0]})
+               </div>`;
+
+          document.getElementById('dash-disc').innerHTML = barsHtml + topLabel;
+        } else {
+          document.getElementById('dash-disc').innerHTML = '<div class="muted">No DISC result found.</div>';
+        }
+
+        // ── Gifts Top 3 ──
+        if (gifts) {
+          document.getElementById('dash-gifts-top').innerHTML = gifts.top3
+            .map((x, i) => `
+              <div style="display:flex; align-items:flex-start; gap:14px; margin-bottom:${i < gifts.top3.length - 1 ? '18px' : '0'}; padding-bottom:${i < gifts.top3.length - 1 ? '18px' : '0'}; border-bottom:${i < gifts.top3.length - 1 ? '1px solid var(--border)' : 'none'};">
+                <div style="background:var(--primary); color:white; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1em; flex-shrink:0;">${i + 1}</div>
+                <div>
+                  <div style="font-weight:700; font-size:1.05em; color:var(--primary-dark);">${x.gift} <span style="color:var(--gold); font-size:0.9em;">(${x.total} pts)</span></div>
+                  <div class="muted" style="margin-top:4px; font-size:0.9em;">Suggested roles: ${x.roles.join(', ')}</div>
+                </div>
+              </div>`)
+            .join('');
+
+          const maxGift = Math.max(...Object.values(gifts.totalsByGift));
+          document.getElementById('dash-gifts-totals').innerHTML = Object.entries(gifts.totalsByGift)
+            .sort((a,b) => b[1] - a[1])
+            .map(([gift, total]) => {
+              const pct = Math.round((total / maxGift) * 100);
+              return `<div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px;">
+                  <strong style="color:var(--primary-dark); font-size:0.92em;">${gift}</strong>
+                  <span style="font-weight:700; color:var(--gold);">${total}</span>
+                </div>
+                <div style="background:#e8e4de; border-radius:4px; height:6px; overflow:hidden;">
+                  <div style="background:linear-gradient(90deg, var(--primary), var(--gold)); width:${pct}%; height:100%; border-radius:4px;"></div>
+                </div>
+              </div>`;
+            }).join('');
+        } else {
+          document.getElementById('dash-gifts-top').innerHTML = '<div class="muted">No gifts result found.</div>';
+          document.getElementById('dash-gifts-totals').innerHTML = '';
+        }
+
+      }
+
+      return { render };
+    })();
+
+    // EmailJS init
+    emailjs.init('SN_l7ppMfQLn47QcJ');
+
+    // Boot
+    DISC.init();
+  </script>
+</body>
+</html>
